@@ -113,8 +113,8 @@ function RemoveNuiMarker(v,k)
         if v1.id == v.id then
             activeui[k] = nil
             SendNUIMessage({toggle = false,id = k})
-            if DoesBlipExist(v.id) then
-                RemoveBlip(v.id)
+            if DoesBlipExist(blip[v.id]) then
+                RemoveBlip(blip[v.id])
             end
             break
         end
