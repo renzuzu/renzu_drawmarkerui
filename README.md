@@ -21,6 +21,7 @@ RegisterCommand("pdhelp", function(source , args, rawCommand)
     }
     TriggerClientEvent('AddNuiMarker',-1,t)
 end, false)
+/pdhelp HELP
 ```
 # Sample Usage Client
 
