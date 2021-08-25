@@ -18,8 +18,9 @@ Citizen.CreateThread(function()
             local dist = #(coord - vector3(v.coord.x,v.coord.y,v.coord.z))
             local job = v.job or 'all'
             if dist < v.distance and active[tonumber(k)] == nil and currentjob == job or dist < v.distance and active[tonumber(k)] == nil then
-                active[tonumber(k)] = v.timeout or false
                 v.id = GetGameTimer()
+                active[tonumber(k)] = v.timeout or false
+                Wait(100)
                 if v.blip then
                     CreateBlip(v.coord.x,v.coord.y,v.coord.z,v.blip or 280,v.label,v.sender or false,v.id)
                 end
@@ -33,6 +34,7 @@ Citizen.CreateThread(function()
                 RemoveNuiMarker(v,k)
             elseif active[tonumber(k)] ~= nil and active[tonumber(k)] then
                 active[tonumber(k)] = active[tonumber(k)] - 1
+                --print(active[tonumber(k)])
             end
         end
     end
@@ -58,31 +60,37 @@ function CreateUI()
                             y = yyy,
                             fa = v.fa,
                             label = v.label,
-                            id = k,
+                            id = v.id,
                             sleep = Config.Sleep * 0.01
                         })
                         ui[k] = xxx
                     end
                 else
-                    for k,v1 in ipairs(Config.Location) do
+                    for k2,v1 in ipairs(Config.Location) do
                         if v1.id == v.id then
-                            activeui[k] = nil
-                            SendNUIMessage({toggle = false,id = k})
                             CreateThread(function()
-                                if DoesBlipExist(v.id) then
-                                    RemoveBlip(v.id)
+                                if DoesBlipExist(blip[v.id]) then
+                                    RemoveBlip(blip[v.id])
                                 end
                             end)
-                            active[tonumber(k)] = nil
+                            active[tonumber(k2)] = nil
+                            activeui[k] = nil
+                            ui[k] = nil
+                            SendNUIMessage({toggle = false,id = v1.id})
+                            --print("delete")
                             break
                         end
                     end
                     activeui[k] = nil
                     ui[k] = nil
-                    SendNUIMessage({toggle = false,id = k})
+                    table.remove(activeui,k)
+                    SendNUIMessage({toggle = false,id = v.id})
+                    --print("delete2")
                 end
             end
         end
+        print("delete thread")
+        SendNUIMessage({clean = true})
         thread = false
     end)
 end

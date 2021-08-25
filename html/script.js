@@ -25,5 +25,8 @@ addEventListener("message", function(event){
             document.getElementById(event.data.id).remove()
         }
     }
+    if (event.data.clean) {
+        document.getElementById('data').innerHTML = ''
+    }
 });
 
